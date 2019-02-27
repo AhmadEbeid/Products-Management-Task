@@ -1,0 +1,500 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductID" Type="int" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="UnitsOrdered" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="QuantityPerUnit" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ReorderLevel" Type="int" Nullable="false" />
+          <Property Name="SupplierID" Type="int" />
+          <Property Name="UnitPrice" Type="money" Nullable="false" />
+          <Property Name="UnitsInStock" Type="int" Nullable="false" />
+          <Property Name="UnitsOnOrder" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Suppliers">
+          <Key>
+            <PropertyRef Name="SupplierID" />
+          </Key>
+          <Property Name="SupplierID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierName" Type="nvarchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Orders__TotalAmo__20C1E124">
+          <End Role="Products" Type="Self.Products" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Products__UnitsO__1BFD2C07">
+          <End Role="Suppliers" Type="Self.Suppliers" Multiplicity="0..1" />
+          <End Role="Products" Type="Self.Products" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="SupplierID" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="DeleteProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="DeleteSupplier" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SupplierID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetProductStock" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InsertProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductName" Type="nvarchar" Mode="In" />
+          <Parameter Name="QuantityPerUnit" Type="varchar" Mode="In" />
+          <Parameter Name="ReorderLevel" Type="int" Mode="In" />
+          <Parameter Name="SupplierID" Type="int" Mode="In" />
+          <Parameter Name="UnitPrice" Type="money" Mode="In" />
+          <Parameter Name="UnitsInStock" Type="int" Mode="In" />
+          <Parameter Name="UnitsOnOrder" Type="int" Mode="In" />
+        </Function>
+        <Function Name="InsertSupplier" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SupplierName" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="MakeOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="int" Mode="In" />
+          <Parameter Name="CustomerName" Type="nvarchar" Mode="In" />
+          <Parameter Name="UnitsOrdered" Type="int" Mode="In" />
+        </Function>
+        <Function Name="SelectAllOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectAllProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectAllProductsNeedsReOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectAllSuppliers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectLargestSupplier" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectProductsCanBeBought" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectProductWithMinimumOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="SelectSomeOrders" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchParam" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SelectSomeProducts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchParam" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="SelectSomeSuppliers" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SearchParam" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="UpdateProduct" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ProductID" Type="int" Mode="In" />
+          <Parameter Name="ProductName" Type="nvarchar" Mode="In" />
+          <Parameter Name="QuantityPerUnit" Type="varchar" Mode="In" />
+          <Parameter Name="ReorderLevel" Type="int" Mode="In" />
+          <Parameter Name="SupplierID" Type="int" Mode="In" />
+          <Parameter Name="UnitPrice" Type="money" Mode="In" />
+          <Parameter Name="UnitsInStock" Type="int" Mode="In" />
+          <Parameter Name="UnitsOnOrder" Type="int" Mode="In" />
+        </Function>
+        <Function Name="UpdateSupplier" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="SupplierID" Type="int" Mode="In" />
+          <Parameter Name="SupplierName" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Suppliers" EntityType="Self.Suppliers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Orders__TotalAmo__20C1E124" Association="Self.FK__Orders__TotalAmo__20C1E124">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Products__UnitsO__1BFD2C07" Association="Self.FK__Products__UnitsO__1BFD2C07">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Order">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductID" Type="Int32" />
+          <Property Name="CustomerName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UnitsOrdered" Type="Int32" Nullable="false" />
+          <Property Name="TotalAmount" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK__Orders__TotalAmo__20C1E124" FromRole="Orders" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductID" />
+          </Key>
+          <Property Name="ProductID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="QuantityPerUnit" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ReorderLevel" Type="Int32" Nullable="false" />
+          <Property Name="SupplierID" Type="Int32" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="UnitsInStock" Type="Int32" Nullable="false" />
+          <Property Name="UnitsOnOrder" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__TotalAmo__20C1E124" FromRole="Products" ToRole="Orders" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK__Products__UnitsO__1BFD2C07" FromRole="Products" ToRole="Suppliers" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="SupplierID" />
+          </Key>
+          <Property Name="SupplierID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Products" Relationship="Self.FK__Products__UnitsO__1BFD2C07" FromRole="Suppliers" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK__Orders__TotalAmo__20C1E124">
+          <End Role="Products" Type="Self.Product" Multiplicity="0..1" />
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="ProductID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Products__UnitsO__1BFD2C07">
+          <End Role="Suppliers" Type="Self.Supplier" Multiplicity="0..1" />
+          <End Role="Products" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Suppliers">
+              <PropertyRef Name="SupplierID" />
+            </Principal>
+            <Dependent Role="Products">
+              <PropertyRef Name="SupplierID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Suppliers" EntityType="Self.Supplier" />
+          <AssociationSet Name="FK__Orders__TotalAmo__20C1E124" Association="Self.FK__Orders__TotalAmo__20C1E124">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Products__UnitsO__1BFD2C07" Association="Self.FK__Products__UnitsO__1BFD2C07">
+            <End Role="Suppliers" EntitySet="Suppliers" />
+            <End Role="Products" EntitySet="Products" />
+          </AssociationSet>
+          <FunctionImport Name="DeleteProduct">
+          <Parameter Name="ProductID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DeleteSupplier">
+          <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InsertProduct">
+            <Parameter Name="ProductName" Mode="In" Type="String" />
+            <Parameter Name="QuantityPerUnit" Mode="In" Type="String" />
+            <Parameter Name="ReorderLevel" Mode="In" Type="Int32" />
+            <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+            <Parameter Name="UnitPrice" Mode="In" Type="Decimal" />
+            <Parameter Name="UnitsInStock" Mode="In" Type="Int32" />
+            <Parameter Name="UnitsOnOrder" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="InsertSupplier">
+          <Parameter Name="SupplierName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="MakeOrder">
+            <Parameter Name="ProductID" Mode="In" Type="Int32" />
+            <Parameter Name="CustomerName" Mode="In" Type="String" />
+            <Parameter Name="UnitsOrdered" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="SelectAllOrders" ReturnType="Collection(Model.SelectAllOrders_Result)" />
+          <FunctionImport Name="SelectAllProducts" ReturnType="Collection(Model.SelectAllProducts_Result)" />
+          <FunctionImport Name="SelectAllProductsNeedsReOrder" ReturnType="Collection(Model.SelectAllProductsNeedsReOrder_Result)" />
+          <FunctionImport Name="SelectAllSuppliers" ReturnType="Collection(Model.SelectAllSuppliers_Result)" />
+          <FunctionImport Name="SelectLargestSupplier" ReturnType="Collection(Model.SelectLargestSupplier_Result)" />
+          <FunctionImport Name="SelectProductsCanBeBought" ReturnType="Collection(Model.SelectProductsCanBeBought_Result)" />
+          <FunctionImport Name="SelectProductWithMinimumOrder" ReturnType="Collection(Model.SelectProductWithMinimumOrder_Result)" />
+          <FunctionImport Name="SelectSomeOrders" ReturnType="Collection(Model.SelectSomeOrders_Result)">
+          <Parameter Name="SearchParam" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SelectSomeProducts" ReturnType="Collection(Model.SelectSomeProducts_Result)">
+          <Parameter Name="SearchParam" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="SelectSomeSuppliers" ReturnType="Collection(Model.SelectSomeSuppliers_Result)">
+          <Parameter Name="SearchParam" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateProduct">
+            <Parameter Name="ProductID" Mode="In" Type="Int32" />
+            <Parameter Name="ProductName" Mode="In" Type="String" />
+            <Parameter Name="QuantityPerUnit" Mode="In" Type="String" />
+            <Parameter Name="ReorderLevel" Mode="In" Type="Int32" />
+            <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+            <Parameter Name="UnitPrice" Mode="In" Type="Decimal" />
+            <Parameter Name="UnitsInStock" Mode="In" Type="Int32" />
+            <Parameter Name="UnitsOnOrder" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="UpdateSupplier">
+            <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+            <Parameter Name="SupplierName" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetProductStock" ReturnType="Collection(Int32)">
+            <Parameter Name="ProductID" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="SelectAllOrders_Result">
+          <Property Type="Int32" Name="OrderID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="CustomerName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="UnitsOrdered" Nullable="false" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="false" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="SelectAllProducts_Result">
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="QuantityPerUnit" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ReorderLevel" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="UnitsInStock" Nullable="false" />
+          <Property Type="Int32" Name="UnitsOnOrder" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SelectAllProductsNeedsReOrder_Result">
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="QuantityPerUnit" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ReorderLevel" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="UnitsInStock" Nullable="false" />
+          <Property Type="Int32" Name="UnitsOnOrder" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SelectAllSuppliers_Result">
+          <Property Type="Int32" Name="SupplierID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="SelectLargestSupplier_Result">
+          <Property Type="Int32" Name="SupplierID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="SelectProductWithMinimumOrder_Result">
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="SelectSomeOrders_Result">
+          <Property Type="Int32" Name="OrderID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="CustomerName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="UnitsOrdered" Nullable="false" />
+          <Property Type="Decimal" Name="TotalAmount" Nullable="false" Precision="19" />
+        </ComplexType>
+        <ComplexType Name="SelectSomeProducts_Result">
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="String" Name="QuantityPerUnit" Nullable="false" MaxLength="10" />
+          <Property Type="Int32" Name="ReorderLevel" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="false" Precision="19" />
+          <Property Type="Int32" Name="UnitsInStock" Nullable="false" />
+          <Property Type="Int32" Name="UnitsOnOrder" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="SelectSomeSuppliers_Result">
+          <Property Type="Int32" Name="SupplierID" Nullable="false" />
+          <Property Type="String" Name="SupplierName" Nullable="false" MaxLength="255" />
+        </ComplexType>
+        <ComplexType Name="SelectProductsCanBeBought_Result">
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="ProductID" Nullable="false" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="Model.Order">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="UnitsOrdered" ColumnName="UnitsOrdered" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="Model.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
+                <ScalarProperty Name="ReorderLevel" ColumnName="ReorderLevel" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+                <ScalarProperty Name="UnitsOnOrder" ColumnName="UnitsOnOrder" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Suppliers">
+            <EntityTypeMapping TypeName="Model.Supplier">
+              <MappingFragment StoreEntitySet="Suppliers">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="DeleteProduct" FunctionName="Model.Store.DeleteProduct" />
+          <FunctionImportMapping FunctionImportName="DeleteSupplier" FunctionName="Model.Store.DeleteSupplier" />
+          <FunctionImportMapping FunctionImportName="InsertProduct" FunctionName="Model.Store.InsertProduct" />
+          <FunctionImportMapping FunctionImportName="InsertSupplier" FunctionName="Model.Store.InsertSupplier" />
+          <FunctionImportMapping FunctionImportName="MakeOrder" FunctionName="Model.Store.MakeOrder" />
+          <FunctionImportMapping FunctionImportName="SelectAllOrders" FunctionName="Model.Store.SelectAllOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectAllOrders_Result">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="UnitsOrdered" ColumnName="UnitsOrdered" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectAllProducts" FunctionName="Model.Store.SelectAllProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectAllProducts_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
+                <ScalarProperty Name="ReorderLevel" ColumnName="ReorderLevel" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+                <ScalarProperty Name="UnitsOnOrder" ColumnName="UnitsOnOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectAllProductsNeedsReOrder" FunctionName="Model.Store.SelectAllProductsNeedsReOrder">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectAllProductsNeedsReOrder_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
+                <ScalarProperty Name="ReorderLevel" ColumnName="ReorderLevel" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+                <ScalarProperty Name="UnitsOnOrder" ColumnName="UnitsOnOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectAllSuppliers" FunctionName="Model.Store.SelectAllSuppliers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectAllSuppliers_Result">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectLargestSupplier" FunctionName="Model.Store.SelectLargestSupplier">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectLargestSupplier_Result">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectProductsCanBeBought" FunctionName="Model.Store.SelectProductsCanBeBought" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectProductsCanBeBought_Result">
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectProductWithMinimumOrder" FunctionName="Model.Store.SelectProductWithMinimumOrder">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectProductWithMinimumOrder_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectSomeOrders" FunctionName="Model.Store.SelectSomeOrders">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectSomeOrders_Result">
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="UnitsOrdered" ColumnName="UnitsOrdered" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectSomeProducts" FunctionName="Model.Store.SelectSomeProducts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectSomeProducts_Result">
+                <ScalarProperty Name="ProductID" ColumnName="ProductID" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="QuantityPerUnit" ColumnName="QuantityPerUnit" />
+                <ScalarProperty Name="ReorderLevel" ColumnName="ReorderLevel" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="UnitsInStock" ColumnName="UnitsInStock" />
+                <ScalarProperty Name="UnitsOnOrder" ColumnName="UnitsOnOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="SelectSomeSuppliers" FunctionName="Model.Store.SelectSomeSuppliers">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Model.SelectSomeSuppliers_Result">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="UpdateProduct" FunctionName="Model.Store.UpdateProduct" />
+          <FunctionImportMapping FunctionImportName="UpdateSupplier" FunctionName="Model.Store.UpdateSupplier" />
+          <FunctionImportMapping FunctionImportName="GetProductStock" FunctionName="Model.Store.GetProductStock" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

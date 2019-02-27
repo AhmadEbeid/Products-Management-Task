@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Products_Management_System.Models.SelectAllOrders_Result>
+
+@{
+    ViewBag.Title = "Orders";
+    var modelAdd = (Products_Management_System.Models.Order)ViewBag.newProduct;
+}
+
+<h2>Orders</h2>
+
+<button type="button" data-toggle="modal" data-target="#addModal" class="btn btn-primary btn">Add</button>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.CustomerName)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.ProductName)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.UnitsOrdered)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.TotalAmount)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@Model.ElementAt(i).CustomerName</td>
+                    <td>@Model.ElementAt(i).ProductName</td>
+                    <td>@Model.ElementAt(i).UnitsOrdered</td>
+                    <td>@Model.ElementAt(i).TotalAmount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: initial;" id="exampleModalLabel">Add Order</h4>
+                <button type="button" onclick="location.href='@Url.Action("Index", "Orders")';" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Add", "Orders"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div style="text-align:-webkit-center">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.CustomerName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.CustomerName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.CustomerName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.UnitsOrdered, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.UnitsOrdered, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.UnitsOrdered, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label style="margin-top: 7px;" class="col-form-label col-sm-4">ProductName</label>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="SupplierID" name="modelAdd.ProductID">
+                                    @for (var j = 0; j < ((IEnumerable<SelectListItem>)ViewBag.products).Count(); j++)
+                                    {
+                                        <option value="@(ViewBag.products[j].Value)">@(ViewBag.products[j].Text)</option>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(model => modelAdd.ProductID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<input type="hidden" style="display:none" id="customInput" data-value="@ViewBag.ModalTogel" />
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var ModalTogel = Number($("#customInput").data("value"));
+        if (ModalTogel == -100) {
+            console.log(ModalTogel)
+            $('#addModal').modal('show')
+        }
+
+    </script>
+}
+

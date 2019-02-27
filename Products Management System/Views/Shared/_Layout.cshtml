@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - Products Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
@@ -16,14 +17,22 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Products Management System", "Index", "Products", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Products", "Index", "Products")</li>
+                    <li>@Html.ActionLink("Suppliers", "Index", "Suppliers")</li>
+                    <li>@Html.ActionLink("Orders", "Index", "Orders")</li>
+                    <li>@Html.ActionLink("Statistics", "Index", "Statistics")</li>
                 </ul>
+                <form class="navbar-form navbar-left">
+                    <div class="form-group">
+                        <input id="inputVal" type="text" class="form-control" placeholder="Search">
+                    </div>
+                    <button type="button" onclick="search()" class="btn btn-default">Submit</button>
+
+                </form>
             </div>
         </div>
     </div>
@@ -31,12 +40,19 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Products Management System</p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        function search() {
+            var val = $('#inputVal').val();
+            location.href="/Search/Index?searchParam="+ val;
+        }
+    </script>
 </body>
 </html>

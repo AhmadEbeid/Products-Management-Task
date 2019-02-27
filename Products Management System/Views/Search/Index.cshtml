@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Search";
+    WebGrid gridOrders = new WebGrid((IEnumerable<Products_Management_System.Models.SelectSomeOrders_Result>)ViewBag.orders);
+    WebGrid gridProducts = new WebGrid((IEnumerable<Products_Management_System.Models.SelectSomeProducts_Result>)ViewBag.products);
+    WebGrid gridSuppliers = new WebGrid((IEnumerable<Products_Management_System.Models.SelectSomeSuppliers_Result>)ViewBag.suppliers);
+}
+
+<h2>Suppliers</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            @gridSuppliers.GetHtml()
+        </div>
+    </div>
+</div>
+<h2>Products</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            @gridProducts.GetHtml()
+        </div>
+    </div>
+</div>
+<h2>Orders</h2>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            @gridOrders.GetHtml()
+        </div>
+    </div>
+</div>
+
+<style>
+    tr > th {
+        background-color: black;
+        padding: 5px 12px;
+        border: solid 2px black;
+    }
+
+        tr > th > a {
+            color: white;
+        }
+
+    tr > td {
+        padding: 5px 12px;
+        border: solid 2px;
+    }
+</style>

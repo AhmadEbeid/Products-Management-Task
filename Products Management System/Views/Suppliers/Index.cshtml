@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Products_Management_System.Models.SelectAllSuppliers_Result>
+
+@{
+    ViewBag.Title = "Suppliers";
+    var modelAdd = (Products_Management_System.Models.SelectAllSuppliers_Result)ViewBag.newSupplier;
+}
+
+<h2>Suppliers</h2>
+
+<button type="button" data-toggle="modal" data-target="#addModal" class="btn btn-primary btn">Add</button>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.SupplierName)</th>
+                <th scope="col">Functions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@Model.ElementAt(i).SupplierName</td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#editModal_@i" class="btn btn-info btn-sm">Edit</button>
+                        <button type="button" onclick="location.href='@Url.Action("Delete", "Suppliers", new { SupplierID = @Model.ElementAt(i).SupplierID })';" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@{var l = 0;}
+@foreach (var item in Model)
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="editModal_@l" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" style="display: initial;" id="exampleModalLabel">Edit Supplier</h4>
+                    <button onclick="location.href='@Url.Action("Index", "Suppliers")';" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div style="text-align:-webkit-center">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => @l)
+                            @Html.HiddenFor(model => item.SupplierID)
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.SupplierName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.SupplierName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.SupplierName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="location.href='@Url.Action("Index", "Suppliers")';" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    { l = l + 1; }
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: initial;" id="exampleModalLabel">Add Supplier</h4>
+                <button onclick="location.href='@Url.Action("Index", "Suppliers")';" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Add", "Suppliers"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div style="text-align:-webkit-center">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => modelAdd.SupplierID)
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.SupplierName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.SupplierName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.SupplierName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="location.href='@Url.Action("Index", "Suppliers")';" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<input type="hidden" style="display:none" id="customInput" data-value="@ViewBag.ModalTogel" />
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var ModalTogel = Number($("#customInput").data("value"));
+        if (ModalTogel != -1 && ModalTogel != -100) {
+            $('#editModal_1').modal('show')
+        }
+        else if (ModalTogel == -100) {
+            console.log(ModalTogel)
+            $('#addModal').modal('show')
+        }
+
+    </script>
+}

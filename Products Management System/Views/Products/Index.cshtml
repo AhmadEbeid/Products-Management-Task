@@ -1,0 +1,265 @@
+﻿@model IEnumerable<Products_Management_System.Models.SelectAllProducts_Result>
+
+@{
+    ViewBag.Title = "Products";
+    var modelAdd = (Products_Management_System.Models.Product)ViewBag.newProduct;
+}
+
+<h2>Products</h2>
+
+<button type="button" data-toggle="modal" data-target="#addModal" class="btn btn-primary btn">Add</button>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.ProductName)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.QuantityPerUnit)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.ReorderLevel)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.SupplierName)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.UnitsOnOrder)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.UnitsInStock)</th>
+                <th scope="col"> @Html.DisplayNameFor(model => model.UnitPrice)</th>
+                <th scope="col">Functions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count(); i++)
+            {
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@Model.ElementAt(i).ProductName</td>
+                    <td>@Model.ElementAt(i).QuantityPerUnit</td>
+                    <td>@Model.ElementAt(i).ReorderLevel</td>
+                    <td>@Model.ElementAt(i).SupplierName</td>
+                    <td>@Model.ElementAt(i).UnitsOnOrder</td>
+                    <td>@Model.ElementAt(i).UnitsInStock</td>
+                    <td>@Model.ElementAt(i).UnitPrice</td>
+                    <td>
+                        <button type="button" data-toggle="modal" data-target="#editModal_@i" class="btn btn-info btn-sm">Edit</button>
+                        <button type="button" onclick="location.href='@Url.Action("Delete", "Products", new { productID = @Model.ElementAt(i).ProductID })';" class="btn btn-danger btn-sm">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@{var l = 0;}
+@foreach (var item in Model)
+{
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="editModal_@l" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" style="display: initial;" id="exampleModalLabel">Edit Product</h4>
+                    <button onclick="location.href='@Url.Action("Index", "Products")';" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-body">
+                        <div style="text-align:-webkit-center">
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => @l)
+                            @Html.HiddenFor(model => item.ProductID)
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.ProductName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.ProductName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.QuantityPerUnit, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="QuantityPerUnit" name="Item.QuantityPerUnit">
+
+                                        @for (var j = 0; j < ViewBag.QuantityList.Length; j++)
+                                        {
+                                            if (ViewBag.QuantityList[j] == item.QuantityPerUnit)
+                                            {
+                                                <option selected value="@(ViewBag.QuantityList[j])">@(ViewBag.QuantityList[j])</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(ViewBag.QuantityList[j])">@(ViewBag.QuantityList[j])</option>
+                                            }
+
+                                        }
+                                    </select>
+                                    @Html.ValidationMessageFor(model => item.QuantityPerUnit, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.ReorderLevel, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.ReorderLevel, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.ReorderLevel, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.SupplierName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="SupplierID" name="Item.SupplierID">
+                                        @for (var j = 0; j < ((IEnumerable<SelectListItem>)ViewBag.suppliers).Count(); j++)
+                                        {
+                                            if ((ViewBag.suppliers[j].Text) == item.SupplierName)
+                                            {
+                                                <option selected value="@(ViewBag.suppliers[j].Value)">@(ViewBag.suppliers[j].Text)</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@(ViewBag.suppliers[j].Value)">@(ViewBag.suppliers[j].Text)</option>
+                                            }
+
+                                        }
+                                    </select>
+                                    @Html.ValidationMessageFor(model => item.SupplierName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.UnitsOnOrder, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.UnitsOnOrder, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.UnitsOnOrder, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.UnitsInStock, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.UnitsInStock, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.UnitsInStock, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                @Html.LabelFor(model => item.UnitPrice, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                                <div class="col-sm-8">
+                                    @Html.EditorFor(model => item.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => item.UnitPrice, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onclick="location.href='@Url.Action("Index", "Products")';" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                    { l = l + 1; }
+                }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="addModal" tabindex="-1" role="dialog" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="display: initial;" id="exampleModalLabel">Add Product</h4>
+                <button type="button" onclick="location.href='@Url.Action("Index", "Products")';" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @using (Html.BeginForm("Add", "Products"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div style="text-align:-webkit-center">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => modelAdd.ProductID)
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.ProductName, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.ProductName, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.ProductName, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.QuantityPerUnit, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                <select class="form-control" id="QuantityPerUnit" name="modelAdd.QuantityPerUnit">
+
+                                    @for (var j = 0; j < ViewBag.QuantityList.Length; j++)
+                                    {
+                                        <option value="@(ViewBag.QuantityList[j])">@(ViewBag.QuantityList[j])</option>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(model => modelAdd.QuantityPerUnit, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.ReorderLevel, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.ReorderLevel, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.ReorderLevel, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.Supplier, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                <select class="form-control" id="SupplierID" name="modelAdd.SupplierID">
+                                    @for (var j = 0; j < ((IEnumerable<SelectListItem>)ViewBag.suppliers).Count(); j++)
+                                    {
+                                        <option value="@(ViewBag.suppliers[j].Value)">@(ViewBag.suppliers[j].Text)</option>
+                                    }
+                                </select>
+                                @Html.ValidationMessageFor(model => modelAdd.SupplierID, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.UnitsOnOrder, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.UnitsOnOrder, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.UnitsOnOrder, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.UnitsInStock, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.UnitsInStock, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.UnitsInStock, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            @Html.LabelFor(model => modelAdd.UnitPrice, htmlAttributes: new { @class = "col-form-label col-sm-4", @style = "margin-top: 7px;" })
+                            <div class="col-sm-8">
+                                @Html.EditorFor(model => modelAdd.UnitPrice, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => modelAdd.UnitPrice, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="location.href='@Url.Action("Index", "Products")';" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<input type="hidden" style="display:none" id="customInput" data-value="@ViewBag.ModalTogel" />
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        var ModalTogel = Number($("#customInput").data("value"));
+        if (ModalTogel != -1 && ModalTogel != -100) {
+            $('#editModal_1').modal('show')
+        }
+        else if (ModalTogel == -100) {
+            console.log(ModalTogel)
+            $('#addModal').modal('show')
+        }
+
+    </script>
+}
+
