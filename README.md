@@ -8,5 +8,7 @@
 * Show statistics for
 
     o Products which the stock need to reorder them
+    
     o The largest supplier of store
+    
     o The product with minimum orders to stop order it from supplier
